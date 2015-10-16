@@ -53,7 +53,7 @@
 <!-- 	<beans:bean id="requestDataValueProcessor" class="org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor"/> -->
 	
 	<!-- Filter that is hit on every request -->
-<!-- 	<beans:bean id="requestFilter" class="com.stillwaterinsurance.projectname.filter.RequestFilter" /> -->
+	<beans:bean id="requestFilter" class="com.stillwaterinsurance.esig.filter.RequestFilter" />
 
 <!-- 	<beans:bean id="mailSender" -->
 <!-- 		class="org.springframework.mail.javamail.JavaMailSenderImpl"> -->

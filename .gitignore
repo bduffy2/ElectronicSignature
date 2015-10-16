@@ -5,4 +5,6 @@ bin
 .project
 sig
 suepk
-results
+src/main/webapp/resources/results/signed_1.pdf
+src/main/webapp/resources/results/signed_2.pdf
+src/main/webapp/resources/results/unsigned.pdf

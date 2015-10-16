@@ -45,14 +45,14 @@ import com.itextpdf.text.pdf.security.PrivateKeySignature;
 public class SignatureField {
 
 	/** The resulting PDF */
-	public static String ORIGINAL = "results/unsigned.pdf";
+	public static String ORIGINAL = "src/main/webapp/resources/results/unsigned.pdf";
 	/** The resulting PDF */
-	public static String SIGNED1 = "results/signed_1.pdf";
+	public static String SIGNED1 = "src/main/webapp/resources/results/signed_1.pdf";
 	/** The resulting PDF */
-	public static String SIGNED2 = "results/signed_2.pdf";
+	public static String SIGNED2 = "src/main/webapp/resources/results/signed_2.pdf";
 
 	/** One of the resources. */
-	public static final String RESOURCE = "resources/img/logo.gif";
+	public static final String RESOURCE = "src/main/webapp/resources/img/logo.gif";
 
 	/** A properties file that is PRIVATE */
 	public static String PATH = "key.properties";
@@ -68,14 +68,11 @@ public class SignatureField {
 	 * @throws IOException
 	 */
 	public void createPdf(String filename) throws IOException, DocumentException {
-		// step 1
 		final Document document = new Document();
-		// step 2
 		final PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
-		// step 3
 		document.open();
-		// step 4
-		document.add(new Paragraph("Hello World!"));
+		document.add(new Paragraph("This is a PDF with a signature field"));
+		
 		final PdfFormField field = PdfFormField.createSignature(writer);
 		field.setWidget(new Rectangle(72, 732, 144, 780), PdfAnnotation.HIGHLIGHT_INVERT);
 		field.setFieldName("mySig");
@@ -88,7 +85,7 @@ public class SignatureField {
 		tp.stroke();
 		field.setAppearance(PdfAnnotation.APPEARANCE_NORMAL, tp);
 		writer.addAnnotation(field);
-		// step 5
+		
 		document.close();
 	}
 
@@ -156,5 +153,6 @@ public class SignatureField {
 		signatures.createPdf(ORIGINAL);
 		signatures.signPdf(ORIGINAL, SIGNED1, false, false);
 		signatures.signPdf(ORIGINAL, SIGNED2, true, true);
+		System.out.println("Done");
 	}
 }
