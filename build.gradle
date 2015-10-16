@@ -1,12 +1,41 @@
+buildscript {
+    repositories {
+        //required for download
+        mavenCentral()
+        
+        //required for cargo and jshint
+        jcenter()
+        
+        //required for custom stillwater plugins
+        maven { url 'http://nexus.stillwaterinsurance.com/content/repositories/stillwater-release' }
+    }
+    dependencies {
+        //gradle js plugin, needed to run jshint
+        classpath 'com.eriwen:gradle-js-plugin:1.12.1'
+        
+        //required for download
+        classpath 'de.undercouch:gradle-download-task:1.0'
+        
+        //required for cargo
+        classpath 'org.gradle.api.plugins:gradle-cargo-plugin:1.1'
+        
+        //stillwater plugin
+        classpath 'com.stillwaterinsurance:gradle-gerrit-plugin:1.0.5'
+    }
+}
 
-apply plugin: 'java' 
+apply plugin: 'java'
+apply plugin: 'war'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
+apply plugin: 'stillwatereclipse' //stillwater plugin
 
 defaultTasks 'tasks'
 
-archivesBaseName = 'sw-xml-test-utils'
+archivesBaseName = 'electronic-signature'
 group = 'com.stillwaterinsurance'
+
+description = """Electronic Signature"""
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -25,16 +54,20 @@ if(hasProperty('user')){
     project.ext.nexususer = getProperty('user')
 }
 
+stillwatereclipse {
+    contextPath = archivesBaseName
+    deployName = description
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-	if(InetAddress.localHost.hostName.toUpperCase().contains("OMBUILDSVR")){
-		//jenkins does not like mavenLocal, but it works well for local development
-		println "HOSTNAME=" + InetAddress.localHost.hostName + ", PROJECT=" + archivesBaseName + ", skipping maven local repo"
-	}else{
-		println "HOSTNAME=" + InetAddress.localHost.hostName + ", PROJECT=" + archivesBaseName + ", using maven local repo"
-		mavenLocal() 
-	}
+    if(InetAddress.localHost.hostName.toUpperCase().contains("OMBUILDSVR")){
+        //jenkins does not like mavenLocal, but it works well for local development
+        println "HOSTNAME=" + InetAddress.localHost.hostName + ", PROJECT=" + archivesBaseName + ", skipping maven local repo"
+    }else{
+        println "HOSTNAME=" + InetAddress.localHost.hostName + ", PROJECT=" + archivesBaseName + ", using maven local repo"
+        mavenLocal() 
+    }
     maven { url project.ext.nexusUrl + '/central' }
     maven { url project.ext.nexusUrl + '/stillwater-release' }
     maven { url project.ext.nexusUrl + '/stillwater-snapshots' }
@@ -43,14 +76,14 @@ repositories {
 
 //dont wait 24 hours to fetch the latest "changing" and "dynamic" jars
 configurations {
-	jaxb	//needed for jaxb bean generation
-	cxf	//needed for wsdl bean generation
-	jaxws	//needed for wsdl bean generation
-	all{
-	    resolutionStrategy{
-	    	cacheChangingModulesFor 0, 'seconds'
-	    	cacheDynamicVersionsFor 0, 'seconds'
-	    }
+    jaxb    //needed for jaxb bean generation
+    cxf //needed for wsdl bean generation
+    jaxws   //needed for wsdl bean generation
+    all{
+        resolutionStrategy{
+            cacheChangingModulesFor 0, 'seconds'
+            cacheDynamicVersionsFor 0, 'seconds'
+        }
     }
 }
 
@@ -70,17 +103,16 @@ ext {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-//	compile "commons-logging:commons-logging:1.2"
-//
-//	compile 'org.apache.httpcomponents:httpcore:4.3.2'
-//	compile 'org.apache.httpcomponents:httpclient:4.3.2'
-//	compile 'commons-io:commons-io:2.4'
-	
-	//compile 'org.apache.pdfbox:pdfbox:1.8.10'
-//	compile 'org.bouncycastle:bcmail-jdk15:1.46'
-//	compile 'com.itextpdf:itextpdf:5.5.7'
-	
-	
-	compile 'com.itextpdf:itextpdf:5.3.2'
-	compile 'org.bouncycastle:bcmail-jdk15on:1.47'
+    compile 'com.itextpdf:itextpdf:5.3.2'
+    compile 'org.bouncycastle:bcmail-jdk15on:1.47'
+    
+    def SPRING_VER = '4.0.6.RELEASE'
+    compile "org.springframework:spring-webmvc:$SPRING_VER"
+    //compile "org.springframework:spring-jdbc:$SPRING_VER"
+    
+    compile "javax.servlet:jstl:1.2"
+    compile "jstl:jstl:1.2"
+    
+    providedCompile "javax.servlet:servlet-api:2.5"
+    
 }
