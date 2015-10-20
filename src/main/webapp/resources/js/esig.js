@@ -4,6 +4,8 @@
 	
 	var _ES = {};
 	
+	var _CONTEXT = "/electronic-signature";
+	
 	$(document).ready(function() {
 		
 		$('#signPdf').click(_ES.signPdfClick);
@@ -12,11 +14,27 @@
 	});
 	
 	_ES.signPdfClick = function() {
-		alert('TODO');
+		$('#signatureModal').reveal({});
 	};
 	
 	_ES.listSignedPdfsClick = function() {
 		alert('TODO');
+	};
+	
+	_ES.signPdf = function() {
+		return $.ajax({
+			type: 'POST',
+			url: _CONTEXT + "/index/signPdf",
+			data: {
+				document: 'testsigA.pdf',
+				field: 'sigField',
+				signature: $('#signature').val()
+			},
+			beforeSend: function() {},
+			complete: function() {
+				$('#signatureModal').trigger('reveal:close');
+			}
+		});
 	};
 	
 	//Make this module globally accessible

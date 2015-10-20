@@ -27,6 +27,7 @@
 		<beans:property name="locations">
 			<beans:list>
 				<beans:value>classpath:properties/all/electronic-signature.properties</beans:value>
+				<beans:value>classpath:properties/#{@systemProperties['os.name'].indexOf('Windows') >= 0 ? 'local' : defaultEnv}/electronic-signature.properties</beans:value>
 			</beans:list>
 		</beans:property>
 	</beans:bean>

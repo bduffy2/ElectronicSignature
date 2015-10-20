@@ -34,6 +34,67 @@
 			<li><span class="linkStyle" id="listSignedPdfs">List of Signed PDF's</span></li>
 		</ul>
 	</div>
+	
+	<div id="footer" class="row">
+		<div class="footer-panel">
+			<div class="row collapse top">
+				<div class="twelve columns">
+					<ul class="footer-links no-bullet">
+						<li>
+							<a href="/fidelity_manuals/sales_manuals/policy/FNPRINE1.pdf" target="_blank">Privacy Policy</a>
+						</li>
+						<li>
+							<a href="/fidelity_manuals/sales_manuals/policy/Security_Policy.pdf" target="_blank">Security Policy</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="row collapse bottom">
+				<div class="two columns hide-for-small">
+					<img src="${contextStatic}/stillwater/img/logo-footer.png" />
+				</div>
+				<div class="ten columns text-right copyright">
+					<span class="small-font">&copy; ${year} Stillwater Insurance Group, Inc. All rights reserved.</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="pageLoadingModal" class="reveal-modal coverScreen">
+		<div id="pageLoadingSpinner" class="loading-spinner"></div>
+		<div class="text" id="loadingModalText">
+		Loading, please wait...
+		</div>
+	</div>
+	
+	<div id="signatureModal" class="reveal-modal">
+		<h5>Sign PDFs</h5>
+		<div class="userInputForm">
+			<ul class="no-bullet">
+				<li>
+					<input type="checkbox"/>
+					<a href="${context}/resources/unsigned.pdf" target="_blank">PDF A</a>
+				</li>
+				<li>
+					<input type="checkbox"/>
+					<a href="${context}/resources/unsigned.pdf" target="_blank">PDF B</a>
+				</li>
+			</ul>
+			<div class="row">
+				<div class="two columns">
+					<label class="inline">Name</label>
+				</div>
+				<div class="ten columns">
+					<input type="text" id="signature" />
+				</div>
+			</div>
+			<div class="row">
+				<input type="button" class="button" value="Sign" onclick="EsGlobal.signPdf()"/>
+				<input type="button" class="button close-reveal-modal" value="Cancel" />
+			</div>
+		</div>
+	</div>
+
 </body>
 
 </html>

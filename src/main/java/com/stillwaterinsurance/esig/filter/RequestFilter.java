@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +40,10 @@ public class RequestFilter implements Filter {
 
 			httpRequest.setAttribute("context", context);
 			httpRequest.setAttribute("contextStatic", contextStatic);
-			request.setAttribute("launchTimestamp", launchTimestamp);
+			httpRequest.setAttribute("launchTimestamp", launchTimestamp);
+			
+			DateTime today = new DateTime();
+			httpRequest.setAttribute("year", today.getYear());
 
 			chain.doFilter(httpRequest, response);
 		} else {
