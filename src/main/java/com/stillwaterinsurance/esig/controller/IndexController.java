@@ -34,13 +34,14 @@ public class IndexController {
 	public ResponseEntity<String> signPdf(final HttpSession session, final HttpServletRequest request, 
 			@RequestParam(value="document") final String document,
 			@RequestParam(value="field") final String field,
-			@RequestParam(value="signature") final String signature) {
+			@RequestParam(value="signature") final String signature,
+			@RequestParam(value="email") final String email) {
 		
 		String result = "";
 		HttpStatus statusCode = HttpStatus.OK;
 		
 		try {
-			signatureService.signPdf(document, field, signature);
+			signatureService.signPdf(document, field, signature, email);
 		} catch (GeneralSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

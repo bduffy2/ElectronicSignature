@@ -109,6 +109,7 @@ dependencies {
     def SPRING_VER = '4.0.6.RELEASE'
     compile "org.springframework:spring-webmvc:$SPRING_VER"
     //compile "org.springframework:spring-jdbc:$SPRING_VER"
+    compile "org.springframework:spring-context-support:$SPRING_VER"
     
     compile "javax.servlet:jstl:1.2"
     compile "jstl:jstl:1.2"
@@ -117,4 +118,6 @@ dependencies {
     
     providedCompile "javax.servlet:servlet-api:2.5"
     
+    compile "javax.mail:mail:1.4"
+    compile 'javax.mail:mailapi:1.4.3'
 }

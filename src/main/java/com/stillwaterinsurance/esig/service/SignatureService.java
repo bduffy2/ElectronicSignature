@@ -5,8 +5,8 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -14,9 +14,20 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.DocumentException;
@@ -44,6 +55,9 @@ public class SignatureService {
 
 	@Value("${esig.results}")
 	private String eSigResults;
+	
+	@Autowired
+	JavaMailSender mailSender;
 
 	/**
 	 * Sign the given PDF
@@ -55,7 +69,7 @@ public class SignatureService {
 	 * @param signature
 	 *            the signature to put on the doc
 	 */
-	public void signPdf(final String document, final String field, final String signature)
+	public void signPdf(final String document, final String field, final String signature, final String email)
 			throws GeneralSecurityException, IOException, DocumentException {
 
 		Security.addProvider(new BouncyCastleProvider());
@@ -72,7 +86,10 @@ public class SignatureService {
 		final DateTime now = new DateTime();
 		String[] srcSplit = document.split("\\.");
 		String resultPdfName = srcSplit[0] + "_" + now.getMillis() + "_" + signature + "." + srcSplit[1];
-		final PdfStamper stamper = PdfStamper.createSignature(reader, new FileOutputStream(eSigResults + resultPdfName), '\0');
+		
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//		final PdfStamper stamper = PdfStamper.createSignature(reader, new FileOutputStream(eSigResults + resultPdfName), '\0');
+		final PdfStamper stamper = PdfStamper.createSignature(reader, outputStream, '\0');
 
 		// appearance
 		final PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
@@ -112,6 +129,36 @@ public class SignatureService {
 		final ExternalDigest digest = new BouncyCastleDigest();
 
 		MakeSignature.signDetached(appearance, digest, es, chain, null, null, null, 0, CryptoStandard.CMS);
+		
+		
+		
+		//Send email with signed PDF attached
+		final MimeMessage message = mailSender.createMimeMessage();
+		try {
+			// construct the text body part
+			MimeBodyPart textBodyPart = new MimeBodyPart();
+			textBodyPart.setText("Signed PDF attached.\n\n"
+					+ "This came from Electronic Signature Proof of Concept.");
+			
+			// construct the pdf body part
+			DataSource dataSource = new ByteArrayDataSource(outputStream.toByteArray(), "application/pdf");
+			MimeBodyPart pdfBodyPart = new MimeBodyPart();
+			pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+			pdfBodyPart.setFileName(resultPdfName);
+
+			// construct the mime multi part
+			MimeMultipart mimeMultipart = new MimeMultipart();
+			mimeMultipart.addBodyPart(textBodyPart);
+			mimeMultipart.addBodyPart(pdfBodyPart);
+			
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			helper.setTo(email);
+			helper.setSubject("Signed PDF");
+			message.setContent(mimeMultipart);
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

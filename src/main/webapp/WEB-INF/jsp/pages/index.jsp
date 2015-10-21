@@ -28,27 +28,13 @@
 		<h1>Electronic Signature</h1>
 		<h4>Proof of Concept</h4>
 	
-		<ul>
-			<li><a href="${context}/resources/unsigned.pdf" target="_blank">Unsigned PDF</a></li>
+		<ul class="no-bullet">
 			<li><span class="linkStyle" id="signPdf">Sign a PDF</span></li>
-			<li><span class="linkStyle" id="listSignedPdfs">List of Signed PDF's</span></li>
 		</ul>
 	</div>
 	
 	<div id="footer" class="row">
 		<div class="footer-panel">
-			<div class="row collapse top">
-				<div class="twelve columns">
-					<ul class="footer-links no-bullet">
-						<li>
-							<a href="/fidelity_manuals/sales_manuals/policy/FNPRINE1.pdf" target="_blank">Privacy Policy</a>
-						</li>
-						<li>
-							<a href="/fidelity_manuals/sales_manuals/policy/Security_Policy.pdf" target="_blank">Security Policy</a>
-						</li>
-					</ul>
-				</div>
-			</div>
 			<div class="row collapse bottom">
 				<div class="two columns hide-for-small">
 					<img src="${contextStatic}/stillwater/img/logo-footer.png" />
@@ -72,20 +58,22 @@
 		<div class="userInputForm">
 			<ul class="no-bullet">
 				<li>
-					<input type="checkbox"/>
-					<a href="${context}/resources/unsigned.pdf" target="_blank">PDF A</a>
+					<input type="checkbox" id="pdfAcheck" />
+					<a href="${context}/resources/pdfs/testsigA.pdf" target="_blank">PDF A</a>
 				</li>
 				<li>
-					<input type="checkbox"/>
-					<a href="${context}/resources/unsigned.pdf" target="_blank">PDF B</a>
+					<input type="checkbox" id="pdfBcheck" />
+					<a href="${context}/resources/pdfs/testsigB.pdf" target="_blank">PDF B</a>
 				</li>
 			</ul>
 			<div class="row">
-				<div class="two columns">
-					<label class="inline">Name</label>
+				<div class="twelve columns">
+					<input type="text" id="signature" placeholder="Name" />
 				</div>
-				<div class="ten columns">
-					<input type="text" id="signature" />
+			</div>
+			<div class="row">
+				<div class="twelve columns">
+					<input type="text" id="email" placeholder="Email Address" />
 				</div>
 			</div>
 			<div class="row">
